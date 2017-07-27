@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suprised.mybatis.examp.mapper.Post">
+    
+    <!-- 批量添加 -->
+    <insert id="insertPosts">
+        insert into post(id, createTime, score, content, blog) values
+        <foreach item="item" collection="list" separator=",">
+	       (#{item.id}, #{item.createTime}, #{item.score}, #{item.content}, #{item.blog.id})
+	    </foreach>
+    </insert>
+    
+    <select id="selectPosts" resultType="Post">
+        select * from post
+    </select>
+    
+    <!-- post resultMap -->
+    <resultMap type="Post" id="postResultMap" autoMapping="true">
+       <id property="id" column="blog_id"/>
+       <association property="blog" column="blog" javaType="Blog" resultMap="com.suprised.mybatis.examp.mapper.Blog.blogResultMap"/>
+    </resultMap>
+    <select id="selectPostByBlog" resultMap="postResultMap">
+        select 
+            p.id as blog_id,
+            p.createTime as createTime,
+            p.score as score,
+            p.content as content,
+            p.blog as blog,
+            b.id as id,
+            b.title as title 
+        from Post p 
+        left join Blog b on (b.id = p.blog) 
+        where blog = #{id}
+    </select>
+</mapper>

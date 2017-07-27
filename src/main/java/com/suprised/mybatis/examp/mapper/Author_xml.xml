@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suprised.mybatis.examp.mapper.Author">
+
+    <!-- 不自动生成id -->
+    <insert id="insertAuthor" useGeneratedKeys="false" parameterType="Author">
+       insert into author(id, name, password, email) values(#{id}, #{name}, #{password}, #{email})
+    </insert>
+    
+    <select id="selectAuthors" resultType="Author" >
+       select * from Author
+    </select>
+    
+    <select id="selectAuthor" resultType="Author">
+       select * from Author where id = #{id}
+    </select>
+    
+    <!-- author resultMap -->
+    <resultMap type="Author" id="authorResultMap" autoMapping="true">
+       <id property="id" column="id"/>
+    </resultMap>
+</mapper>

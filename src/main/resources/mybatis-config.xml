@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="config.properties" />
+    <typeAliases>
+        <package name="com.suprised.mybatis.examp.mapper"/>
+    </typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${mybatis.driver}" />
+				<property name="url" value="${mybatis.url}" />
+				<property name="username" value="${mybatis.username}" />
+				<property name="password" value="${mybatis.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- <mappers>
+		<mapper resource="com/suprised/mybatis/examp/mapper/BlogMapper_xml.xml" />
+	</mappers> -->
+	<mappers>
+	   <mapper resource="com/suprised/mybatis/examp/mapper/BlogMapper_xml.xml" />
+	   <mapper resource="com/suprised/mybatis/examp/mapper/Author_xml.xml" />
+	   <mapper resource="com/suprised/mybatis/examp/mapper/Post_xml.xml" />
+	   <package name="com.suprised.mybatis.examp.mapper"/>
+	   <!-- <mapper class="com.suprised.mybatis.examp.mapper.BlogMapper"/> -->
+	</mappers>
+</configuration>

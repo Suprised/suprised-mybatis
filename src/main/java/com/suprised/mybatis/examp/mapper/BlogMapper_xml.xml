@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suprised.mybatis.examp.mapper.Blog">
+    
+    <!-- 自动映射：autoMapping -->
+    <resultMap id="blogResultMap" type="Blog" autoMapping="true">
+	  <id property="id" column="id" />
+	  <result property="title" column="title"/>
+	</resultMap>
+	
+	<!-- 关联其他对象的ResultMap -->
+	<resultMap type="Blog" id="blogResultMapAssoOtherObj" autoMapping="true">
+	   <id property="id" column="id"/>
+	   <!-- 一对一映射 -->
+	   <association property="author" column="author" javaType="Author" resultMap="com.suprised.mybatis.examp.mapper.Author.authorResultMap"></association>
+	   <!-- 一对多映射 -->
+	   <collection property="posts" column="id" javaType="ArrayList" ofType="Post" select="com.suprised.mybatis.examp.mapper.Post.selectPostByBlog"></collection>
+	   <!-- 过滤 -->
+	   <!-- 
+	   	<discriminator javaType=""></discriminator>
+	    -->
+	</resultMap>
+	
+	<select id="selectBlog" resultType="Blog">
+		select * from Blog where id = #{id}
+	</select>
+	
+	<select id="selectBlogByResultMap" resultMap="blogResultMap">
+	   select * from Blog where id = #{id}
+	</select>
+	
+	<select id="selectBlogAndAsso" resultMap="blogResultMapAssoOtherObj">
+       select 
+        * 
+       from Blog b 
+       left join Author a on (b.author = a.id) 
+       where b.id = #{id}
+    </select>
+	
+	<!-- 自动生成id: 需要依赖数据库的主键生成策略 -->
+	<insert id="insertBlogAutoId" useGeneratedKeys="true" keyProperty="id">
+	   insert into blog(title) values(#{title})
+	</insert>
+	
+	<!-- 不自动生成id -->
+	<insert id="insertBlog" useGeneratedKeys="false" parameterType="Blog">
+       insert into blog(id, title) values(#{id}, #{title})
+    </insert>
+    
+    <!-- 可重用的sql片段 -->
+    <sql id="whereId">
+        where id = ${id}
+    </sql>
+	
+	<update id="updateBlog" parameterType="Blog">
+	   update blog set title = #{title} 
+	   <include refid="whereId"><property name="id" value="#{id}"/></include> 
+	</update>
+	
+	<delete id="deleteBlog">
+	   delete blog <include refid="whereId"><property name="id" value="#{id}"/></include>
+	</delete>
+</mapper>
